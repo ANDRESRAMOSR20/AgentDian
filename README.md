@@ -8,5 +8,5 @@ pip install -r requirements.txt
 
 ### Colaboradores:
 
--Andres Felipe Ramos Rojas.
+-Andres Felipe Ramos Rojas. <br>
 -Verónica Ruíz Bautista
