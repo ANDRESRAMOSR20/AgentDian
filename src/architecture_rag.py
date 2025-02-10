@@ -1,11 +1,10 @@
 from langchain_community.document_loaders import PDFPlumberLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from confg import vector_store, llm
-from langchain import hub
+from confg import vector_store
 from langchain_core.documents import Document
 from typing_extensions import List, TypedDict
-from langgraph.graph import START, StateGraph
-
+from langgraph.graph import MessagesState, StateGraph
+from langchain_core.tools import tool
 
 # scan of the content
 file_path = "../docs/use-conectores.pdf"
@@ -24,29 +23,22 @@ all_splits = text_splitter.split_documents(docs)
 document_ids = vector_store.add_documents(documents=all_splits)
 
 # Define prompt for question-answering
-prompt = hub.pull("rlm/rag-prompt")
+
 
 class State(TypedDict):
     question: str
     context: List[Document]
     answer: str
 
-# Define application steps
-def retrieve(state: State):
-    retrieved_docs = vector_store.similarity_search(state["question"])
-    return {"context": retrieved_docs}
+@tool(response_format="content_and_artifact")
+def retrieve(query: str):
+    """Retrieve information related to a query."""
+    retrieved_docs = vector_store.similarity_search(query, k=2)
+    serialized = "\n\n".join(
+        f"Source: {doc.metadata}\n" f"Content: {doc.page_content}"
+        for doc in retrieved_docs
+    )
+    return serialized, retrieved_docs
 
+graph_builder = StateGraph(MessagesState)
 
-def generate(state: State):
-    docs_content = "\n\n".join(doc.page_content for doc in state["context"])
-    messages = prompt.invoke({"question": state["question"], "context": docs_content})
-    response = llm.invoke(messages)
-    return {"answer": response.content}
-
-# Compile application and test
-graph_builder = StateGraph(State).add_sequence([retrieve, generate])
-graph_builder.add_edge(START, "retrieve")
-graph = graph_builder.compile()
-
-response = graph.invoke({"question": " Type of conjunctions ?"})
-print(response["answer"])
