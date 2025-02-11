@@ -1,8 +1,6 @@
 from langchain_community.document_loaders import PDFPlumberLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from confg import vector_store
-from langchain_core.documents import Document
-from typing_extensions import List, TypedDict
 from langgraph.graph import MessagesState, StateGraph
 from langchain_core.tools import tool
 
@@ -22,13 +20,7 @@ all_splits = text_splitter.split_documents(docs)
 # Index chunks
 document_ids = vector_store.add_documents(documents=all_splits)
 
-# Define prompt for question-answering
 
-
-class State(TypedDict):
-    question: str
-    context: List[Document]
-    answer: str
 
 @tool(response_format="content_and_artifact")
 def retrieve(query: str):
