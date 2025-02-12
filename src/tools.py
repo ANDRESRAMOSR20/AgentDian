@@ -1,28 +1,8 @@
-from langchain_core.messages import SystemMessage
-from architecture_rag import MessagesState, retrieve, graph_builder
-from confg import llm
-from langgraph.graph import END
-from langgraph.prebuilt import ToolNode, tools_condition
 
-
-
-# Step 1: Generate an AIMessage that may include a tool-call to be sent.
-def query_or_respond(state: MessagesState):
-    """Generate tool call for retrieval or respond."""
-    llm_with_tools = llm.bind_tools([retrieve])
-    response = llm_with_tools.invoke(state["messages"])
-    # MessagesState appends messages to state instead of overwriting
-    return {"messages": [response]}
-
-
-# Step 2: Execute the retrieval.
-tools = ToolNode([retrieve])
-
-
-# Step 3: Generate a response using the retrieved content.
+# Generate a answer implementing the recuperation content
 def generate(state: MessagesState):
     """Generate answer."""
-    # Get generated ToolMessages
+    # Obtain the tools messages (retrieved content)
     recent_tool_messages = []
     for message in reversed(state["messages"]):
         if message.type == "tool":
@@ -31,29 +11,42 @@ def generate(state: MessagesState):
             break
     tool_messages = recent_tool_messages[::-1]
 
-    # Format into prompt
-    docs_content = "\n\n".join(doc.content for doc in tool_messages)
+    if not tool_messages:
+        docs_content = "No se encontró información relevante."
+    else:
+        docs_content = "\n\n".join(set(doc.content for doc in tool_messages))
+
+    # Create the system message with the recuperation context
     system_message_content = (
         "Usted es un asistente para tareas de respuesta a preguntas. "
         "Utilice los siguientes elementos de contexto recuperados para responder "
-        "las preguntas. si no conoces la resputa, di que "
-        "no la sabes. Utiliza cinco frases como maximo para"
-        "responder concisamente."
+        "las preguntas. Si no conoces la respuesta, di que no la sabes. "
+        "Utiliza cinco frases como máximo para responder concisamente."
         "\n\n"
         f"{docs_content}"
     )
+
+    # Obtain the conversation messages (history)
     conversation_messages = [
         message
         for message in state["messages"]
         if message.type in ("human", "system")
         or (message.type == "ai" and not message.tool_calls)
     ]
+
+    # Create the prompt with the history and the context
     prompt = [SystemMessage(system_message_content)] + conversation_messages
 
-    # Run
+    # Generate the answer with the language model
     response = llm.invoke(prompt)
+
+    # Add the answer to history
+    message_history.add_ai_message(response.content)
+
+    # Return the update state
     return {"messages": [response]}
 
+# Graph Configuration
 graph_builder.add_node(query_or_respond)
 graph_builder.add_node(tools)
 graph_builder.add_node(generate)
@@ -67,12 +60,19 @@ graph_builder.add_conditional_edges(
 graph_builder.add_edge("tools", "generate")
 graph_builder.add_edge("generate", END)
 
+# Graph Compilation
 graph = graph_builder.compile()
 
+# Execute the graph with the input message
 input_message = "Quiero que me digas los tipos de conjunciones?"
 
 for step in graph.stream(
-    {"messages": [{"role": "user", "content": input_message}]},
+    {"messages": [HumanMessage(content=input_message)]},
     stream_mode="values",
 ):
     step["messages"][-1].pretty_print()
+
+# Show the message history
+print("\nHistorial de mensajes:")
+for message in message_history.messages:
+    print(f"{message.type}: {message.content}")
