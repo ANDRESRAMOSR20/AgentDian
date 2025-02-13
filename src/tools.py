@@ -1,8 +1,9 @@
 from langchain_core.messages import SystemMessage
-from architecture_rag import MessagesState, retrieve, graph_builder
-from confg import llm
-from langgraph.graph import END
+from .architecture_rag import retrieve
+from .confg import llm
+from langgraph.graph import END, StateGraph, MessagesState
 from langgraph.prebuilt import ToolNode, tools_condition
+
 
 
 
@@ -54,6 +55,8 @@ def generate(state: MessagesState):
     response = llm.invoke(prompt)
     return {"messages": [response]}
 
+graph_builder = StateGraph(MessagesState)
+
 graph_builder.add_node(query_or_respond)
 graph_builder.add_node(tools)
 graph_builder.add_node(generate)
@@ -69,10 +72,3 @@ graph_builder.add_edge("generate", END)
 
 graph = graph_builder.compile()
 
-input_message = "Quiero que me digas los tipos de conjunciones?"
-
-for step in graph.stream(
-    {"messages": [{"role": "user", "content": input_message}]},
-    stream_mode="values",
-):
-    step["messages"][-1].pretty_print()

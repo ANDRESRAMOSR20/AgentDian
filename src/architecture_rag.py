@@ -1,14 +1,14 @@
 from langchain_community.document_loaders import PDFPlumberLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from confg import vector_store
-from langgraph.graph import MessagesState, StateGraph
+from .confg import vector_store
 from langchain_core.tools import tool
-
+import os
 # scan of the content
-file_path = "../docs/use-conectores.pdf"
+
+
+file_path = os.path.abspath("D:/PythonProject/deep_transformer/docs/use-conectores.pdf")
 loader = PDFPlumberLoader(file_path)
 docs = loader.load()
-
 # Load and chunk contents of the pdf
 text_splitter = RecursiveCharacterTextSplitter(
     chunk_size=1000,  # chunk size (characters)
@@ -32,5 +32,5 @@ def retrieve(query: str):
     )
     return serialized, retrieved_docs
 
-graph_builder = StateGraph(MessagesState)
+
 
