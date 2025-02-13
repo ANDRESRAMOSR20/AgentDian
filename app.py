@@ -1,6 +1,6 @@
 import streamlit as st
-from architecture_rag import graph
-from langchain_core.messages import HumanMessage
+from src.tools import graph
+
 
 st.set_page_config(page_title="Asistente Virtual", layout="wide")
 st.title("📄 Asistente Virtual basado para la DIAN")
