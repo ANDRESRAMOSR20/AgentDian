@@ -36,4 +36,4 @@ streamlit run app.py --server.port 8502
 
 - Andres Felipe Ramos Rojas <br>
 - Verónica Ruíz Bautista
-- 
+- Samuel Alvarez
