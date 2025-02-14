@@ -26,7 +26,14 @@ incluido podremos intalar el modelo nlp para la codificacion de los embeddings.
 from langchain_huggingface import HuggingFaceEmbeddings
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
 ```
+# EJECUCION:
+Para ejecutar nuestro Chatbot, tendremos que usar el siguiente comando:
+```bash
+streamlit run app.py --server.port 8502
+```
+![interfaz!](img/interfaz.png "visualizacion del chatbot")
 ### Colaboradores:
 
 - Andres Felipe Ramos Rojas <br>
 - Verónica Ruíz Bautista
+- 
