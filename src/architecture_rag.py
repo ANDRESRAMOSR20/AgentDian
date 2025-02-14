@@ -6,6 +6,7 @@ from .confg import vector_store  # Importa tu vector_store desde el archivo de c
 from langchain_core.tools import tool
 import os
 
+
 # Función para cargar y procesar múltiples PDFs
 def load_and_process_pdfs(pdf_paths):
     all_docs = []
@@ -19,9 +20,15 @@ def load_and_process_pdfs(pdf_paths):
         # Cargar el PDF
         loader = PDFPlumberLoader(abs_path)
         docs = loader.load()
+
+        # Agregar metadatos personalizados a cada documento
+        for doc in docs:
+            doc.metadata["source"] = pdf_path
+
         # Agregar los documentos cargados a la lista general
         all_docs.extend(docs)
     return all_docs
+
 
 # Lista de rutas relativas de los PDFs
 pdf_paths = [
@@ -43,12 +50,30 @@ all_splits = text_splitter.split_documents(docs)
 # Indexar los chunks en la base de datos vectorial
 document_ids = vector_store.add_documents(documents=all_splits)
 
+
 @tool(response_format="content_and_artifact")
 def retrieve(query: str):
     """Recuperar información relacionada con una consulta."""
-    retrieved_docs = vector_store.similarity_search(query, k=2)
+    retrieved_docs = vector_store.similarity_search(query, k=5)  # Busca los 5 documentos más similares
     serialized = "\n\n".join(
         f"Source: {doc.metadata}\n" f"Content: {doc.page_content}"
         for doc in retrieved_docs
     )
     return serialized, retrieved_docs
+
+
+# Función para buscar documentos relacionados con una categoría usando embeddings
+def get(category_query: str, k: int = 5):
+    """
+    Busca documentos relacionados con una categoría usando embeddings.
+
+    Args:
+        category_query (str): La consulta relacionada con la categoría (ej. "legal").
+        k (int): El número de documentos más similares a devolver.
+
+    Returns:
+        List[Document]: Una lista de documentos más similares.
+    """
+    # Realiza una búsqueda de similitud en la base de datos vectorial
+    retrieved_docs = vector_store.similarity_search(category_query, k=k)
+    return retrieved_docs
