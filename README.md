@@ -228,6 +228,14 @@ Finalmente, mencionar que toda esta experiencia fue bastante divertida, emociona
 ----
 ----
 
+## Guía y explicación del programa
+
+El siguiente link lleva a un video en donde se explica un poco más del contexto y razón de la aplicación, así como un **tour** más interactivo al programa [aqui](https://youtu.be/OKOpMOqt0Vs)
+
+
+----
+----
+
 ## Colaboradores:
 
 - Andres Felipe Ramos Rojas 
