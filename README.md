@@ -85,7 +85,7 @@ encuentran en el archivo **requirements.txt** son:
    * langgraph-sdk (0.1.51)
    * langsmith (0.3.4)
    * pdfplumber
- * 
+  
 Se requiere tener dependencias como `Cmake`, `gcc`,`CUDA`  y `c++`. En caso de no tenerlas puedes instarlas con:
 
 
