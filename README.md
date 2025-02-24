@@ -210,7 +210,7 @@ Estos modelos fueron escogidos sobre otros por ser relativamente ligeros, ser de
 
 La aplicación se baso en el siguiente diagrama de flujo:
 
-
+![Diagrama de flujo](img/diagrama_flujo_agentdian.png)
 
 
 ----
