@@ -1,6 +1,6 @@
 # AgentDian
 
-La aplicación consiste en un `ChatBot` implementadoun asistente virtual que ayude a responder preguntas y ser de guía en el proceso de facturación de la DIAN en base a documentos ya quemados y que el usuario puede agregar para que el asistente tenga más conocimientos.
+La aplicación consiste en un `ChatBot` como asistente virtual que ayuda a responder preguntas y ser de guía en el proceso de facturación de la DIAN en base a documentos ya quemados y que el usuario puede agregar para que el asistente tenga más conocimientos.
 
 Se usa una Base de Dactos Vectorial como `ChromaDB`para 
 alamacenar la información de los documentos par que el modelo este en capacida de responder preguntas. Esto se logro usando a `LangChain` para trabajar en una arquitectura `RAG` y poder configurar facilmente el modelo para la tarea de responder preguntas en base a los documentos, específicamente en temas relacionados con la DIAN.
