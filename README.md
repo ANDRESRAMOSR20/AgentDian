@@ -1,140 +1,141 @@
+
 # AgentDian
 
-La aplicación consiste en un `ChatBot` como asistente virtual que ayuda a responder preguntas y ser de guía en el proceso de facturación de la DIAN en base a documentos ya quemados y que el usuario puede agregar para que el asistente tenga más conocimientos.
+**AgentDian** is a virtual assistant chatbot designed to help users understand and navigate the electronic invoicing processes of **DIAN** (Colombia’s National Tax and Customs Directorate). It uses preloaded documentation and allows users to upload additional documents to improve its knowledge base.
 
-Se usa una Base de Dactos Vectorial como `ChromaDB`para 
-alamacenar la información de los documentos par que el modelo este en capacida de responder preguntas. Esto se logro usando a `LangChain` para trabajar en una arquitectura `RAG` y poder configurar facilmente el modelo para la tarea de responder preguntas en base a los documentos, específicamente en temas relacionados con la DIAN.
+The application leverages a **vector database** (ChromaDB) to store information extracted from documents, enabling the model to answer user queries effectively. This functionality is achieved using **LangChain** in a **RAG (Retrieval-Augmented Generation)** architecture, making it easy to configure the model for document-based question answering, particularly for DIAN-related topics.
 
-Para el desarrollo de la interfaz gráfica se uso enteramente `Streamlit` gracias a su facilidad para crear interfaces intuitivas, amigables y de rápido desarrollo.
+The entire user interface is built using **Streamlit**, which provides a quick and intuitive way to develop user-friendly applications.
 
+---
 
-## Instrucciones de instalación:
+## Installation Instructions
 
-> **Nota:** Asegúrate de tener la versión de Python 3.12.
+> **Note:** Ensure you have **Python 3.12** installed.
 
-Clona este repositorio con 
+Clone this repository:
 
-```bash 
+```bash
 git clone https://github.com/ANDRESRAMOSR20/AgentDian.git
 ```
 
-Va a la carpeta del proyecto con:
+Navigate to the project directory:
+
 ```bash
 cd AgentDian
 ```
 
-Crea un entorno virtual con:
+Create a virtual environment:
 
 ```bash
-python -m venv  ./
+python -m venv ./
 ```
 
-Descarga las dependencias necesarios:
+Install the required dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Se requiere de un modelo en local usando Ollama, en caso de no 
-tenerlo descargalo [aqu](https://ollama.com/). Y usa el modelo
-con:
+This project requires a local model using **Ollama**. If you haven’t installed it, download it [here](https://ollama.com/). Then pull the model using:
 
 ```bash
 ollama pull hf.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF:IQ4_NL
 ```
 
-Para comprobar que el modelo esta funcionando ve al siguiente archivo:
-
+To verify that the model is working, open the following file:
 
 ![alt text](img/image.png)
 
-Haz click en el boton:
+Click the button:
+
 ![alt text](img/image1.png)
 
-Deberia dar una respuesta como lo siguiente:
+You should receive a response similar to the following:
 
 ![alt text](img/image2.png)
 
-> **Nota:** En caso de errores ve al siguiente apartado para instalación de dependencias. 
+> **Note:** If you encounter any errors, refer to the dependencies section below.
 
-Y ejecuta la aplicación con:
+To run the application:
 
 ```bash
 streamlit run app.py
 ```
 
-----
-----
+---
 
-## Dependencias, librerias usadas y requesitos de ejecución
+## Dependencies and Requirements
 
-Las librerias usadas para el proyecto que se 
-encuentran en el archivo **requirements.txt** son:
-   * streamlit
-   * PyPDF2
-   * python-docx
-   * langchain (0.3.17)
-   *  langchain-chroma (0.2.1)
-   * langchain-community (0.3.16)
-   * langchain-core (0.3.33)
-   * langchain-huggingface (0.1.2)
-   * langchain-ollama (0.2.3)
-   * langchain-text-splitters (0.3.5)
-   * langgraph (0.2.69)
-   * langgraph-checkpoint (2.0.10)
-   * langgraph-sdk (0.1.51)
-   * langsmith (0.3.4)
-   * pdfplumber
-  
-Se requiere tener dependencias como `Cmake`, `gcc`,`CUDA`  y `c++`. En caso de no tenerlas puedes instarlas con:
+All necessary packages are listed in **requirements.txt**, including:
 
+- streamlit  
+- PyPDF2  
+- python-docx  
+- langchain (0.3.17)  
+- langchain-chroma (0.2.1)  
+- langchain-community (0.3.16)  
+- langchain-core (0.3.33)  
+- langchain-huggingface (0.1.2)  
+- langchain-ollama (0.2.3)  
+- langchain-text-splitters (0.3.5)  
+- langgraph (0.2.69)  
+- langgraph-checkpoint (2.0.10)  
+- langgraph-sdk (0.1.51)  
+- langsmith (0.3.4)  
+- pdfplumber  
 
-### WIndows
-Instala desde las páginas principales de [Cmake](https://cmake.org/download/), [gcc](https://gcc.gnu.org/install/binaries.html), [CUDA](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/) y [C++](https://visualstudio.microsoft.com/es/vs/features/cplusplus/)
+Additionally, you'll need `CMake`, `gcc`, `CUDA`, and a `C++` compiler. If not installed, follow the instructions below:
 
-### Linux/Unix🐧
+### Windows
 
+Download and install from their official pages:
 
-**Base Debian**:
+- [CMake](https://cmake.org/download/)  
+- [GCC](https://gcc.gnu.org/install/binaries.html)  
+- [CUDA](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/)  
+- [C++ (Visual Studio)](https://visualstudio.microsoft.com/vs/features/cplusplus/)  
+
+### Linux/Unix 🐧
+
+**Debian-based:**
 
 ```bash
 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
 sudo mv cuda-ubuntu2004.pin /etc/apt/sources.list.d/cuda.list
 sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
 sudo apt update
-sudo apt install cuda cmake build-essential #incluye gcc y c++
-
+sudo apt install cuda cmake build-essential
 ```
 
-**Base Fedora/RHEL**:
+**Fedora/RHEL-based:**
 
 ```bash
 sudo dnf install cmake gcc-c++
 ```
 
-Para instalar **CUDA** haz lo siguiente:
+Install **CUDA**:
 
 ```bash
 wget https://developer.download.nvidia.com/compute/cuda/12.8.0/local_installers/cuda_12.8.0_570.86.10_linux.run
 sudo sh cuda_12.8.0_570.86.10_linux.run
 ```
 
-
-**Base Arch Linux**:
+**Arch Linux-based:**
 
 ```bash
-sudo pacman -S cmake base-devel cuda #incluye gcc y c++
+sudo pacman -S cmake base-devel cuda
 ```
 
-**Sistemas con gestor o repositorio de Nix como NixOs**:
+**Nix/NixOS:**
 
 ```bash
 nix-env -iA nixpkgs.cmake nixpkgs.gcc nixpkgs.gnumake nixpkgs.cudatoolkit
 ```
 
-Desde el archivo `/etc/nixos/configuration.nix` sería:
+Or in `/etc/nixos/configuration.nix`:
 
-```bash
+```nix
 environment.systemPackages = with pkgs; [
   gcc
   gnumake
@@ -143,102 +144,91 @@ environment.systemPackages = with pkgs; [
 ];
 ```
 
-La aplicación requiere de mínimo si se usa GPU o tarjeta gráfica **4 GB de VRAM**. Para el uso de CPU y RAM es recomendable tener un procesador de **4 núcleos** o más a una **frecuencia mínina de 2.6 GHz** y **16 GB de RAM**.
+> **Hardware requirements:**  
+- GPU: Minimum **4 GB VRAM**  
+- CPU: At least **4 cores @ 2.6 GHz**  
+- RAM: **16 GB or more** recommended
 
 ---
----
 
+## Usage & Demonstration
 
-
-## Ejecución y ejemplos de uso
-
-Al ejecutar la aplicación se desplegará una pestaña en al navegador por defecto del Sistema Operativo en donde veras algo como lo siguiente:
-
+When you launch the app, it opens in your browser and looks like this:
 
 ![alt text](img/image3.png)
 
-Recordar que el modelo viene con información necesaria para responder preguntas sobre procesos y dudas sobre la DIAN como se ve en la imagen:
-
+It’s preloaded with DIAN-related information to assist with common questions:
 
 ![alt text](img/image4.png)
 
-La aplicacición permite buscar documentos.
+You can also search existing documents:
 
 ![alt text](img/image5.png)
 
-Buscamos con un tema en específico como por ejemplo legalidad.
+For instance, you might search for legal information:
 
-![alt text](img/image6.png)
+![alt text](img/image6.png)  
 ![alt text](img/image7.png)
 
+You can upload new `PDF` documents as well. The system splits them into **chunks** for better understanding:
 
-También permite agregar nuevos documentos con extensión `PDF` en donde cabe aclarar que para facilidad de lectura por parte del modelo, los documentos se separan en **Chunks**.
-
-![alt text](img/image8.png)
+![alt text](img/image8.png)  
 ![alt text](img/image9.png)
 
-Seleccionamos un documento de nuestra computadora:
+Select a file from your machine:
 
 ![alt text](img/image10.png)
 
-Y ahora lo cargamos a la aplicacición:
+And upload it to the app:
 
 ![alt text](img/image11.png)
 
-Rectificamos buscando un tema relacionado con el documento cargado, en mi caso sensores:
+You can then query the chatbot about topics in the uploaded document. In this example, the document was about sensors:
 
 ![alt text](img/image12.png)
 
-Y ahora el modelo está en la capacidad de contestar preguntas en relación a temas del documento cargado:
-
+The chatbot is now able to answer questions specific to the newly uploaded content:
 
 ![alt text](img/image13.png)
 
-----
-----
-## Modelos usados
+---
 
-Para la parte de los `embeddings` se usa el modelo [sentence-transformers/all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2) para clasificar los **Chukns** de los documentos y buscar respuestas similares.En el caso **ChatBot** se uso el modelo de [meta-llama/Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct).
+## Models Used
 
-Estos modelos fueron escogidos sobre otros por ser relativamente ligeros, ser de código libre y de fácil integración con herramientas como `LangChain` y `Transformers` de **HugginFace**.
+- **Embeddings Model:** [sentence-transformers/all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2) for document chunk classification and semantic search.
+- **ChatBot Model:** [meta-llama/Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct)
 
+These models were chosen for their open-source nature, lightweight architecture, and seamless integration with tools like **LangChain** and **Transformers** from HuggingFace.
 
-----
-----
+---
 
-## Flujo de trabajo
+## Workflow Diagram
 
-La aplicación se baso en el siguiente diagrama de flujo:
+The following flowchart outlines the architecture of the application:
 
-![Diagrama de flujo](img/diagrama_flujo_agentdian.png)
+![Flowchart](img/diagrama_flujo_agentdian.png)
 
+---
 
-----
-----
+## Reflection
 
-## Reflexión
+This project was a significant challenge that required a deep understanding of machine learning models, RAG architecture, and the integration of multiple libraries like **LangChain**, **Transformers**, **Streamlit**, and **vector databases**.
 
-El desarrollo del proyecto fue todo un desafio en donde se tenía que aplicar muchos conocimientos con respecto a trabajo de modelos, arquitectura RAG, uso de librerías como LangChain, Transformers, Streamlit, y trabajo con BD Vectoriales. Todo esos temas tuvimos que unirlos para dar con un producto, que a nuestro parecer, es profesional y de fácil escalabilidad.
+Teamwork and task delegation were also critical components. Initially, the team lacked structure and clarity. However, as development progressed, we successfully coordinated and distributed responsibilities effectively.
 
-Otro aspecto que también fue un reto es el trabajo en equipo y la asignación de tareas, al principio comenzamos de manera muy desorganizada y con poca clarida de que hacer, y sobre todo, de cómo hacerlo. Pero con el pasar de los días fuímos capaces de trabajar en armonía y asignar las partes que cada integrante debía de hacer.
+Overall, it was a fun, exciting, and educational journey that mirrors the real-world work of professionals in the AI and software development space. We believe this experience will serve as a stepping stone toward our goal of becoming experts in intelligent agents and artificial intelligence.
 
-Finalmente, mencionar que toda esta experiencia fue bastante divertida, emocionante, difícil y que dejo bastante conocimientos en cada uno. Sabemos que está vivencia es lo que ocurre en el día a día de un profesional en cualquier área de desarrollo de sistemas y aplicaciones, y que dicha tarea nos pondrá un escalón más arriba de nuestra meta de ser profesionales con el manejo de modelos, agentes inteligentes y Inteligencias Artificiales.I
+---
 
+## Program Tour and Video Guide
 
-----
-----
+A video overview of the application, including context and a guided walkthrough, is available [here](https://youtu.be/OKOpMOqt0Vs)
 
-## Guía y explicación del programa
+---
 
-El siguiente link lleva a un video en donde se explica un poco más del contexto y razón de la aplicación, así como un **tour** más interactivo al programa [aqui](https://youtu.be/OKOpMOqt0Vs)
+## Contributors
 
-
-----
-----
-
-## Colaboradores:
-
-- Andres Felipe Ramos Rojas 
-- Verónica Ruíz Bautista
-- Samuel Alvarez
-- Juan Pablo Montoya Valencia
+- Andres Felipe Ramos Rojas  
+- Verónica Ruíz Bautista  
+- Samuel Alvarez  
+- Juan Pablo Montoya Valencia  
